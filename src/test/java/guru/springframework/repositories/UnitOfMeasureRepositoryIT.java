@@ -39,7 +39,7 @@ public class UnitOfMeasureRepositoryIT {
 
     @Before
     public void setUp() throws Exception {
-        recipeBootstrap = new RecipeBootstrap(categoryRepository, recipeRepository, unitOfMeasureRepository);
+        recipeBootstrap = new RecipeBootstrap(categoryRepository, recipeRepository, unitOfMeasureRepository, null, null, null);
         Optional<UnitOfMeasure> unitOfMeasureOptional = StreamSupport.stream(unitOfMeasureRepository.findAll().spliterator(), false).findFirst();
 
         if(!unitOfMeasureOptional.isPresent()) {
