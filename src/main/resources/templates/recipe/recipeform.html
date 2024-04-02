@@ -64,6 +64,10 @@
                                         </label>
                                     </div>
                                 </div>
+                                <div th:each="category, idx : ${recipe.categories}">
+                                    <input type="hidden" th:field="*{categories[__${idx.index}__].id}">
+                                    <input type="hidden" th:field="*{categories[__${idx.index}__].description}">
+                                </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-3 form-group" th:class="${#fields.hasErrors('prepTime')}
@@ -151,10 +155,21 @@
                                         <li th:remove="all">asdf</li>
                                         <li th:each="ingredient : ${recipe.ingredients}"
                                             th:text="${(ingredient.getAmount() +
-                                        ' ' + ingredient.uom.getDescription() +
+                                            ' ' + ingredient.uom.getDescription() +
+                                            ' - ' + ingredient.getDescription())}">1 Teaspoon of Sugar
+                                        </li>
+                                    </ul>
+                                    <ul th:if="${#lists.isEmpty(recipe.ingredients)}">
                                         ' - ' + ingredient.getDescription())}">1 Teaspoon of Sugar
                                         </li>
                                     </ul>
+                                    <div th:each="ingredient, itemStat: ${recipe.ingredients}">
+                                        <input type="hidden" th:field="*{ingredients[__${itemStat.index}__].id}" />
+                                        <input type="hidden" th:field="*{ingredients[__${itemStat.index}__].amount}" />
+                                        <input type="hidden" th:field="*{ingredients[__${itemStat.index}__].uom.id}" />
+                                        <input type="hidden" th:field="*{ingredients[__${itemStat.index}__].uom.description}" />
+                                        <input type="hidden" th:field="*{ingredients[__${itemStat.index}__].description}" />
+                                    </div>
                                 </div>
                             </div>
                         </div>

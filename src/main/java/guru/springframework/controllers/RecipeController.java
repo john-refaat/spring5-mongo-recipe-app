@@ -44,18 +44,21 @@ public class RecipeController {
 
     @GetMapping("recipe/{id}/update")
     public String updateRecipe(@PathVariable String id, Model model){
-        model.addAttribute("recipe", recipeService.findCommandById(id));
+        RecipeCommand recipeCommand = recipeService.findCommandById(id);
+        model.addAttribute("recipe", recipeCommand);
+        model.addAttribute("ingredients", recipeCommand.getIngredients());
         return RECIPE_RECIPEFORM_URL;
     }
 
     @PostMapping("recipe")
-    public String saveOrUpdate(@Valid @ModelAttribute("recipe") RecipeCommand command, BindingResult bindingResult){
+    public String saveOrUpdate(@Valid @ModelAttribute("recipe") RecipeCommand command, BindingResult bindingResult, Model model){
 
         if(bindingResult.hasErrors()){
 
             bindingResult.getAllErrors().forEach(objectError -> {
                 log.debug(objectError.toString());
             });
+            model.addAttribute("recipe", command);
 
             return RECIPE_RECIPEFORM_URL;
         }
