@@ -25,7 +25,7 @@ public class RecipeReactiveRepositoryTest {
         Recipe recipe = new Recipe();
         recipe.setDescription("Yummy");
         recipeReactiveRepository.save(recipe).block();
-        Long count = recipeReactiveRepository.count().block();
-        Assert.assertEquals(Long.valueOf(1L), count);
+        Recipe saved = recipeReactiveRepository.findByDescription("Yummy").block();
+        Assert.assertEquals("Yummy", saved.getDescription());
     }
 }

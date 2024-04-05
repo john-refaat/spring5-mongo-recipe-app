@@ -2,6 +2,9 @@ package guru.springframework.repositories;
 
 import guru.springframework.bootstrap.RecipeBootstrap;
 import guru.springframework.domain.UnitOfMeasure;
+import guru.springframework.repositories.reactive.CategoryReactiveRepository;
+import guru.springframework.repositories.reactive.RecipeReactiveRepository;
+import guru.springframework.repositories.reactive.UnitOfMeasureReactiveRepository;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -35,11 +38,20 @@ public class UnitOfMeasureRepositoryIT {
     @Autowired
     RecipeRepository recipeRepository;
 
+    @Autowired
+    UnitOfMeasureReactiveRepository unitOfMeasureReactiveRepository;
+
+    @Autowired
+    CategoryReactiveRepository categoryReactiveRepository;
+
+    @Autowired
+    RecipeReactiveRepository recipeReactiveRepository;
+
     RecipeBootstrap recipeBootstrap;
 
     @Before
     public void setUp() throws Exception {
-        recipeBootstrap = new RecipeBootstrap(categoryRepository, recipeRepository, unitOfMeasureRepository, null, null, null);
+        recipeBootstrap = new RecipeBootstrap(categoryRepository, recipeRepository, unitOfMeasureRepository, recipeReactiveRepository, categoryReactiveRepository, unitOfMeasureReactiveRepository);
         Optional<UnitOfMeasure> unitOfMeasureOptional = StreamSupport.stream(unitOfMeasureRepository.findAll().spliterator(), false).findFirst();
 
         if(!unitOfMeasureOptional.isPresent()) {

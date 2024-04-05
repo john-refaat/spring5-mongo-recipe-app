@@ -74,7 +74,7 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
         categoryRepository.save(cat4);
     }
 
-    private void loadUom(){
+    public void loadUom(){
         UnitOfMeasure uom1 = new UnitOfMeasure();
         uom1.setDescription("Teaspoon");
         unitOfMeasureRepository.save(uom1);
@@ -283,6 +283,6 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
         tacosRecipe.setSource("Simply Recipes");
 
         recipes.add(tacosRecipe);
-        return recipes;
+            return recipes;
     }
 }

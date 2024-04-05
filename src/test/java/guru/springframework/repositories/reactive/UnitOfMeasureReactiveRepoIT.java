@@ -1,6 +1,8 @@
 package guru.springframework.repositories.reactive;
 
+import guru.springframework.bootstrap.RecipeBootstrap;
 import guru.springframework.domain.UnitOfMeasure;
+import guru.springframework.repositories.UnitOfMeasureRepository;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,39 +27,33 @@ public class UnitOfMeasureReactiveRepoIT {
     @Autowired
     UnitOfMeasureReactiveRepository unitOfMeasureReactiveRepository;
 
+    @Autowired
+    UnitOfMeasureRepository unitOfMeasureRepository;
+
+    RecipeBootstrap recipeBootstrap;
+
     @Before
     public void setUp() throws Exception {
+        recipeBootstrap = new RecipeBootstrap(null, null, unitOfMeasureRepository, null, null, unitOfMeasureReactiveRepository);
         Long count = unitOfMeasureReactiveRepository.count().block();
-        if (count.equals(0L)) {
-            UnitOfMeasure teaspoon = new UnitOfMeasure();
-            teaspoon.setDescription("teaspoon");
-
-            UnitOfMeasure tablespoon = new UnitOfMeasure();
-            tablespoon.setDescription("tablespoon");
-
-            UnitOfMeasure cup = new UnitOfMeasure();
-            cup.setDescription("cup");
-
-            List<UnitOfMeasure> items = new ArrayList<UnitOfMeasure>();
-            items.add(teaspoon);
-            items.add(tablespoon);
-            items.add(cup);
-            unitOfMeasureReactiveRepository.saveAll(items).blockFirst();
+        if (count == 0L) {
+            recipeBootstrap.loadUom();
         }
+
     }
 
     @Test
     public void findAll() throws Exception {
         Flux<UnitOfMeasure> all = unitOfMeasureReactiveRepository.findAll();
         Long count = all.count().block();
-        Assert.assertEquals(Long.valueOf(3L), count);
+        Assert.assertEquals(Long.valueOf(8L), count);
 
     }
 
     @Test
     public void findByDescription() throws Exception {
-        Mono<UnitOfMeasure> uomOptional = unitOfMeasureReactiveRepository.findByDescription("teaspoon");
-
-        Assert.assertEquals("teaspoon", uomOptional.block().getDescription());
+        UnitOfMeasure uom= unitOfMeasureReactiveRepository.findByDescription("Teaspoon").block();
+        System.out.println(uom);
+        Assert.assertEquals("Teaspoon", uom.getDescription());
     }
 }
