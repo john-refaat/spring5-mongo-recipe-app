@@ -63,7 +63,7 @@ public class IngredientServiceImpl implements IngredientService {
                 .peek(ingredientCommand -> ingredientCommand.setRecipeId(recipeId)).findFirst();*/
 
         return recipeMono.flatMapIterable(Recipe::getIngredients).filter(ingredient -> ingredient.getId().equalsIgnoreCase(ingredientId))
-                .map(ingredientToIngredientCommand::convert).doOnNext(command -> command.setRecipeId(recipeId)).next();
+                .single().map(ingredientToIngredientCommand::convert).doOnNext(command -> command.setRecipeId(recipeId));
 
 
        /* if(!ingredientCommandOptional.isPresent()){
