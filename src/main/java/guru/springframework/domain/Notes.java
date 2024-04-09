@@ -1,6 +1,7 @@
 package guru.springframework.domain;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
@@ -9,7 +10,13 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@NoArgsConstructor
 public class Notes {
+
+    public Notes(String id, String recipeNotes) {
+        this.id = id;
+        this.recipeNotes = recipeNotes;
+    }
 
     private String id;
     private String recipeNotes;

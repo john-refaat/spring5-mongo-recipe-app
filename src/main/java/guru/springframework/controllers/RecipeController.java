@@ -1,6 +1,7 @@
 package guru.springframework.controllers;
 
 import guru.springframework.commands.RecipeCommand;
+import guru.springframework.domain.Recipe;
 import guru.springframework.exceptions.NotFoundException;
 import guru.springframework.services.RecipeService;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.util.Objects;
 
 /**
  * Created by jt on 6/19/17.
@@ -30,7 +32,10 @@ public class RecipeController {
     @GetMapping("/recipe/{id}/show")
     public String showById(@PathVariable String id, Model model){
 
-        model.addAttribute("recipe", recipeService.findById(id));
+        Recipe recipe = recipeService.findById(id).block();
+        if (Objects.isNull(recipe))
+            throw new NotFoundException("Recipe Not Found. For ID value: " + id );
+        model.addAttribute("recipe", recipe);
 
         return "recipe/show";
     }
@@ -44,7 +49,7 @@ public class RecipeController {
 
     @GetMapping("recipe/{id}/update")
     public String updateRecipe(@PathVariable String id, Model model){
-        RecipeCommand recipeCommand = recipeService.findCommandById(id);
+        RecipeCommand recipeCommand = recipeService.findCommandById(id).block();
         model.addAttribute("recipe", recipeCommand);
         model.addAttribute("ingredients", recipeCommand.getIngredients());
         return RECIPE_RECIPEFORM_URL;
@@ -63,7 +68,7 @@ public class RecipeController {
             return RECIPE_RECIPEFORM_URL;
         }
 
-        RecipeCommand savedCommand = recipeService.saveRecipeCommand(command);
+        RecipeCommand savedCommand = recipeService.saveRecipeCommand(command).block();
 
         return "redirect:/recipe/" + savedCommand.getId() + "/show";
     }
@@ -73,7 +78,7 @@ public class RecipeController {
 
         log.debug("Deleting id: " + id);
 
-        recipeService.deleteById(id);
+        recipeService.deleteById(id).block();
         return "redirect:/";
     }
 
